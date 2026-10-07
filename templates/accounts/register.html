@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Création de Compte - Vitalis Green{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center w-full relative h-full min-h-[70vh] py-8">
+    
+    <div class="w-full max-w-lg z-10 fade-enter-active">
+        <!-- Glassmorphism Container -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col glass-panel">
+            
+            <!-- Header -->
+            <div class="px-8 pt-8 pb-6 text-center border-b border-outline-variant bg-surface-light">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-container text-on-primary-container mb-4 shadow-sm border border-outline-variant">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+                </div>
+                <h1 class="font-headline-md text-headline-md text-primary mb-2 tracking-tight">Vitalis Green</h1>
+                <p class="font-body-md text-body-md text-on-surface-variant">Création d'un compte Patient</p>
+            </div>
+            
+            <!-- Form Canvas -->
+            <div class="p-8 flex-grow">
+                <form action="{% url 'register' %}" method="POST" class="space-y-form-stack" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="p-3 mb-4 rounded bg-error-container text-on-error-container border border-error/20 text-sm">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- First Name -->
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="id_first_name">Prénom</label>
+                            <input type="text" name="first_name" id="id_first_name" required value="{{ form.first_name.value|default_if_none:'' }}"
+                                   class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3 placeholder-text-secondary" 
+                                   placeholder="Jean">
+                            {% if form.first_name.errors %}
+                                <p class="text-error text-xs mt-1">{{ form.first_name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Last Name -->
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="id_last_name">Nom</label>
+                            <input type="text" name="last_name" id="id_last_name" required value="{{ form.last_name.value|default_if_none:'' }}"
+                                   class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3 placeholder-text-secondary" 
+                                   placeholder="Dupont">
+                            {% if form.last_name.errors %}
+                                <p class="text-error text-xs mt-1">{{ form.last_name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Email -->
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="id_email">Adresse Email</label>
+                            <input type="email" name="email" id="id_email" required value="{{ form.email.value|default_if_none:'' }}"
+                                   class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3 placeholder-text-secondary" 
+                                   placeholder="jean.dupont@email.com">
+                            {% if form.email.errors %}
+                                <p class="text-error text-xs mt-1">{{ form.email.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Username -->
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="id_username">Nom d'utilisateur</label>
+                            <input type="text" name="username" id="id_username" required value="{{ form.username.value|default_if_none:'' }}"
+                                   class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3 placeholder-text-secondary" 
+                                   placeholder="jeandupont123">
+                            {% if form.username.errors %}
+                                <p class="text-error text-xs mt-1">{{ form.username.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Password -->
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="id_password1">Mot de passe</label>
+                            <input type="password" name="password1" id="id_password1" required
+                                   class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3 placeholder-text-secondary" 
+                                   placeholder="••••••••">
+                            {% if form.password1.errors %}
+                                <p class="text-error text-xs mt-1">{{ form.password1.errors.0 }}</p>
+                            {% else %}
+                                <p class="mt-1 font-caption text-caption text-text-secondary">Au moins 8 caractères.</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Confirm Password -->
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="id_password2">Confirmer le mot de passe</label>
+                            <input type="password" name="password2" id="id_password2" required
+                                   class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3 placeholder-text-secondary" 
+                                   placeholder="••••••••">
+                            {% if form.password2.errors %}
+                                <p class="text-error text-xs mt-1">{{ form.password2.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Terms Checkbox -->
+                    <div class="flex items-start gap-3 bg-surface-container-low p-4 rounded-lg border border-outline-variant mt-2">
+                        <div class="flex items-center h-5 mt-0.5">
+                            <input type="checkbox" id="terms" name="terms" required
+                                   class="w-4 h-4 rounded text-primary border-outline focus:ring-primary focus:ring-2">
+                        </div>
+                        <label class="font-caption text-caption text-on-surface-variant cursor-pointer" for="terms">
+                            J'accepte les <a href="#" class="text-primary hover:underline font-medium">Conditions d'Utilisation</a> et la <a href="#" class="text-primary hover:underline font-medium">Politique de Confidentialité</a>.
+                        </label>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md py-3 px-4 rounded-DEFAULT shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary flex justify-center items-center gap-2 active:scale-[0.98]">
+                        Créer le compte
+                        <span class="material-symbols-outlined text-[18px]">person_add</span>
+                    </button>
+                </form>
+                
+                <!-- Link to Login -->
+                <div class="mt-6 text-center font-body-md text-body-md text-on-surface-variant border-t border-outline-variant pt-6">
+                    Vous avez déjà un compte ? <a href="{% url 'login' %}" class="text-primary hover:underline font-semibold ml-1">Se connecter</a>
+                </div>
+            </div>
+            
+            <!-- Minimal Footer -->
+            <div class="px-8 py-4 bg-surface-light border-t border-outline-variant text-center">
+                <p class="font-caption text-caption text-text-secondary">Protégé par cryptage avancé. Vitalis Green CDSS.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

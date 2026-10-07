@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon Profil - Vitalis Green{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[900px] mt-8 mb-12 fade-enter-active mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Mon Profil</h2>
+        <p class="font-body-md text-body-md text-text-secondary mt-1">Gérez vos informations personnelles et votre sécurité</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <!-- Avatar Card -->
+        <div class="sm:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col items-center text-center glass-panel">
+            <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=3c6a00&color=fff&size=128&bold=true"
+                 alt="Avatar"
+                 class="w-24 h-24 rounded-full border-4 border-primary/20 shadow-lg mb-4">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">{{ user.first_name }} {{ user.last_name }}</h3>
+            <p class="font-caption text-caption text-text-secondary mt-1">{{ user.email }}</p>
+            <div class="mt-4 px-3 py-1 rounded-full border border-outline-variant bg-surface-container font-caption text-caption text-on-surface-variant">
+                {% if user.is_admin %}Admin{% else %}Utilisateur{% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="sm:col-span-2 grid grid-cols-2 gap-4">
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 glass-panel">
+                <div class="font-label-md text-label-md text-text-secondary mb-1">Évaluations</div>
+                <div class="font-display-hero text-[36px] text-primary">{{ total_predictions }}</div>
+            </div>
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 glass-panel">
+                <div class="font-label-md text-label-md text-text-secondary mb-1">Dernier Score</div>
+                {% if last_prediction %}
+                    <div class="font-display-hero text-[36px] text-on-surface">{{ last_prediction.get_risk_percentage|floatformat:0 }}%</div>
+                    <div class="font-caption text-caption mt-1 {% if last_prediction.risk_level == 'HIGH' %}text-status-error{% elif last_prediction.risk_level == 'MEDIUM' %}text-status-warning{% else %}text-primary{% endif %}">
+                        {% if last_prediction.risk_level == 'HIGH' %}Élevé{% elif last_prediction.risk_level == 'MEDIUM' %}Modéré{% else %}Faible{% endif %}
+                    </div>
+                {% else %}
+                    <div class="font-display-hero text-[36px] text-text-secondary">—</div>
+                {% endif %}
+            </div>
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 glass-panel">
+                <div class="font-label-md text-label-md text-text-secondary mb-1">Membre depuis</div>
+                <div class="font-headline-sm text-headline-sm text-on-surface">{{ user.date_joined|date:"M Y" }}</div>
+            </div>
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 glass-panel">
+                <div class="font-label-md text-label-md text-text-secondary mb-1">Statut</div>
+                {% if user.is_active %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-on-primary-fixed-variant border border-primary/20 font-label-md text-label-md mt-1">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span>Actif
+                    </div>
+                {% else %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error-container text-on-error-container border border-error/20 font-label-md text-label-md mt-1">
+                        <span class="w-2 h-2 rounded-full bg-status-error"></span>Inactif
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Two Column Layout for Forms -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Update Profile Info -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm glass-panel overflow-hidden">
+            <div class="px-6 py-5 border-b border-outline-variant bg-surface-light flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Informations Personnelles</h4>
+            </div>
+            <div class="p-6">
+                <form method="post" class="space-y-4" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_info">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ profile_form.first_name.id_for_label }}">Prénom</label>
+                            {{ profile_form.first_name }}
+                        </div>
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ profile_form.last_name.id_for_label }}">Nom</label>
+                            {{ profile_form.last_name }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ profile_form.email.id_for_label }}">Adresse Email</label>
+                        {{ profile_form.email }}
+                    </div>
+
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ profile_form.username.id_for_label }}">Nom d'utilisateur</label>
+                        {{ profile_form.username }}
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-primary text-on-primary font-label-md text-label-md py-2.5 px-4 rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-sm">
+                            <span class="material-symbols-outlined text-[18px]">save</span>
+                            Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm glass-panel overflow-hidden">
+            <div class="px-6 py-5 border-b border-outline-variant bg-surface-light flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">lock</span>
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Changer le Mot de Passe</h4>
+            </div>
+            <div class="p-6">
+                <form method="post" class="space-y-4" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ pw_form.old_password.id_for_label }}">Mot de passe actuel</label>
+                        {{ pw_form.old_password }}
+                        {% if pw_form.old_password.errors %}
+                            <p class="text-error text-xs mt-1">{{ pw_form.old_password.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ pw_form.new_password1.id_for_label }}">Nouveau mot de passe</label>
+                        {{ pw_form.new_password1 }}
+                        {% if pw_form.new_password1.errors %}
+                            <p class="text-error text-xs mt-1">{{ pw_form.new_password1.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ pw_form.new_password2.id_for_label }}">Confirmer le nouveau mot de passe</label>
+                        {{ pw_form.new_password2 }}
+                        {% if pw_form.new_password2.errors %}
+                            <p class="text-error text-xs mt-1">{{ pw_form.new_password2.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant flex items-start gap-2">
+                        <span class="material-symbols-outlined text-text-secondary text-[16px] mt-0.5">info</span>
+                        <p class="font-caption text-caption text-text-secondary">Le mot de passe doit contenir au moins 8 caractères.</p>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full border border-error text-status-error font-label-md text-label-md py-2.5 px-4 rounded-lg hover:bg-error-container transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">lock_reset</span>
+                            Changer le mot de passe
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="mt-6 bg-surface-container-lowest border border-error/20 rounded-xl p-6 glass-panel">
+        <h4 class="font-headline-sm text-headline-sm text-status-error flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined">warning</span>
+            Zone de Danger
+        </h4>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <p class="font-body-md text-body-md text-on-surface">Se déconnecter de votre compte</p>
+                <p class="font-caption text-caption text-text-secondary">Vous serez redirigé vers la page d'accueil.</p>
+            </div>
+            <a href="{% url 'logout' %}" class="px-5 py-2 border border-error text-status-error font-label-md text-label-md rounded-lg hover:bg-error-container transition-colors flex items-center gap-2 shrink-0">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Se déconnecter
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

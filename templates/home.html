@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}Vitalis Green - Détection Préventive{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative pt-20 pb-24 overflow-hidden">
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-primary-container rounded-full mix-blend-multiply filter blur-[80px] opacity-40 animate-blob"></div>
+    <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-secondary-container rounded-full mix-blend-multiply filter blur-[80px] opacity-40 animate-blob animation-delay-2000"></div>
+
+    <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <div class="fade-enter-active">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container border border-outline-variant text-on-surface-variant font-label-md text-label-md mb-6">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    Système d'Aide à la Décision Clinique
+                </div>
+                
+                <h1 class="font-display-hero text-[48px] md:text-[64px] leading-[1.1] text-on-surface tracking-tight mb-6">
+                    Détection Proactive du Risque par <span class="text-primary">IA</span>.
+                </h1>
+                
+                <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-[540px]">
+                    Autonomisez les professionnels de santé avec des évaluations précises basées sur l'apprentissage automatique. Obtenez des analyses instantanées pour améliorer les résultats cliniques grâce à une intervention précoce.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'detection:prediction_form' %}" class="bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm">
+                            Nouvelle Évaluation <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                        </a>
+                        <a href="{% url 'dashboard' %}" class="bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-md py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
+                            Tableau de bord
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm">
+                            Commencer <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                        </a>
+                        <a href="{% url 'about' %}" class="bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low font-label-md text-label-md py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
+                            En savoir plus
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Hero Decorative Card -->
+            <div class="lg:ml-auto w-full max-w-[500px]">
+                <div class="bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant rounded-2xl p-8 shadow-lg glass-panel transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+                        <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+                            <span class="material-symbols-outlined">monitor_heart</span>
+                        </div>
+                        <div>
+                            <h5 class="font-headline-sm text-headline-sm text-on-surface">Configuration Clinique</h5>
+                            <p class="font-caption text-caption text-text-secondary">Analyse en cours...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="h-6 bg-surface-container rounded-md w-11/12 animate-pulse"></div>
+                        <div class="h-6 bg-surface-container rounded-md w-8/12 animate-pulse"></div>
+                        <div class="h-6 bg-surface-container rounded-md w-full animate-pulse"></div>
+                        <div class="h-6 bg-surface-container rounded-md w-10/12 animate-pulse"></div>
+                    </div>
+                    
+                    <div class="mt-8 pt-4 border-t border-outline-variant flex justify-between items-center">
+                        <span class="font-caption text-caption text-text-secondary">Précision du Modèle</span>
+                        <span class="font-label-md text-label-md text-primary bg-primary/10 px-2 py-1 rounded">XGBoost 98%</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<!-- Impact Section -->
+<section class="py-20 bg-surface-container-low border-y border-outline-variant">
+    <div class="max-w-[1200px] mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mb-4">L'Impact Global du Diabète</h2>
+            <p class="font-body-md text-body-md text-text-secondary max-w-[600px] mx-auto">
+                La détection précoce est cruciale. Comprendre l'ampleur et les signes du diabète peut mener à des interventions précoces vitales.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Impact Card 1 -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center hover:shadow-md transition-shadow group">
+                <div class="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center text-on-surface-variant mb-6 group-hover:bg-primary-container group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">public</span>
+                </div>
+                <h4 class="font-headline-md text-headline-md text-on-surface mb-3">422 Millions</h4>
+                <p class="font-body-md text-body-md text-text-secondary">
+                    De personnes dans le monde vivent actuellement avec le diabète, rendant le dépistage proactif essentiel.
+                </p>
+            </div>
+            
+            <!-- Impact Card 2 -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center hover:shadow-md transition-shadow group">
+                <div class="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center text-on-surface-variant mb-6 group-hover:bg-primary-container group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">vital_signs</span>
+                </div>
+                <h4 class="font-headline-md text-headline-md text-on-surface mb-3">Signes Précoces</h4>
+                <p class="font-body-md text-body-md text-text-secondary">
+                    Mictions fréquentes, soif accrue et fatigue sont des indicateurs précoces communs d'un risque élevé.
+                </p>
+            </div>
+            
+            <!-- Impact Card 3 -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center hover:shadow-md transition-shadow group">
+                <div class="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center text-on-surface-variant mb-6 group-hover:bg-primary-container group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">health_metrics</span>
+                </div>
+                <h4 class="font-headline-md text-headline-md text-on-surface mb-3">Prévention</h4>
+                <p class="font-body-md text-body-md text-text-secondary">
+                    Identifier tôt les patients à haut risque permet des interventions sur le mode de vie qui peuvent retarder l'apparition.
+                </p>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<!-- Steps Section -->
+<section class="py-20 bg-surface-container-lowest">
+    <div class="max-w-[1200px] mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Évaluation de Risque Simplifiée</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <!-- Connecting Line (Desktop) -->
+            <div class="hidden md:block absolute top-[40px] left-[15%] right-[15%] h-[2px] bg-outline-variant/50 border-t border-dashed border-outline-variant"></div>
+            
+            <!-- Step 1 -->
+            <div class="relative pt-6">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12 bg-surface-container-lowest border-2 border-primary rounded-full flex items-center justify-center font-headline-sm text-primary bg-white z-10">1</div>
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center mt-6">
+                    <div class="text-primary mb-4 flex justify-center">
+                        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">person_add</span>
+                    </div>
+                    <h5 class="font-headline-sm text-headline-sm text-on-surface mb-3">Créer un Compte</h5>
+                    <p class="font-body-md text-body-md text-text-secondary">
+                        Inscrivez votre profil clinique en toute sécurité pour accéder aux outils d'évaluation.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="relative pt-6">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12 bg-surface-container-lowest border-2 border-primary rounded-full flex items-center justify-center font-headline-sm text-primary bg-white z-10">2</div>
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center mt-6">
+                    <div class="text-primary mb-4 flex justify-center">
+                        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">description</span>
+                    </div>
+                    <h5 class="font-headline-sm text-headline-sm text-on-surface mb-3">Données Médicales</h5>
+                    <p class="font-body-md text-body-md text-text-secondary">
+                        Saisissez les paramètres clés du patient (Âge, IMC, Glycémie, HbA1c) dans notre formulaire sécurisé.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="relative pt-6">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12 bg-surface-container-lowest border-2 border-primary rounded-full flex items-center justify-center font-headline-sm text-primary bg-white z-10">3</div>
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center mt-6">
+                    <div class="text-primary mb-4 flex justify-center">
+                        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">analytics</span>
+                    </div>
+                    <h5 class="font-headline-sm text-headline-sm text-on-surface mb-3">Score de Risque</h5>
+                    <p class="font-body-md text-body-md text-text-secondary">
+                        Recevez une évaluation immédiate générée par l'IA pour guider la prise de décision clinique.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<!-- ML Info Section -->
+<section class="py-16 bg-surface-container-low border-t border-outline-variant">
+    <div class="max-w-[800px] mx-auto px-6 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-on-primary-container mb-6 shadow-sm border border-outline-variant">
+            <span class="material-symbols-outlined text-3xl">psychology</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md text-on-surface mb-4">Propulsé par le Machine Learning</h4>
+        <p class="font-body-md text-body-md text-text-secondary leading-relaxed">
+            Vitalis Green utilise un modèle de machine learning <strong>XGBoost</strong> robuste, entraîné sur de vastes ensembles de données cliniques. Cela garantit une grande précision et fiabilité dans l'évaluation des schémas complexes des données patients, fournissant aux professionnels de la santé un outil d'évaluation statistique digne de confiance.
+        </p>
+    </div>
+</section>
+{% endblock %}

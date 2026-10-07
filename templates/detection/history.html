@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Historique des Évaluations - Vitalis Green{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1200px] mt-8 mb-12 fade-enter-active mx-auto">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Historique des Évaluations</h2>
+            <p class="font-body-md text-body-md text-text-secondary mt-1">
+                Consultez toutes vos évaluations passées du risque diabétique.
+            </p>
+        </div>
+        <a href="{% url 'detection:prediction_form' %}" class="px-6 py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Nouvelle Évaluation
+        </a>
+    </div>
+
+    <!-- Table Container -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm flex flex-col overflow-hidden glass-panel">
+        
+        {% if predictions %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-outline-variant bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Glycémie</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">IMC</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Score</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Niveau</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                    {% for pred in predictions %}
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface whitespace-nowrap">{{ pred.created_at|date:"d M Y H:i" }}</td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">{{ pred.blood_glucose_level|floatformat:0 }} <span class="text-xs text-text-secondary">mg/dL</span></td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">{{ pred.bmi|floatformat:1 }}</td>
+                        <td class="px-6 py-4 font-body-md text-body-md font-semibold text-on-surface">{{ pred.get_risk_percentage|floatformat:0 }}%</td>
+                        <td class="px-6 py-4">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border 
+                                {% if pred.risk_level == 'LOW' %}bg-primary/10 text-on-primary-fixed-variant border-primary/20
+                                {% elif pred.risk_level == 'MEDIUM' %}bg-status-warning/10 text-status-warning border-status-warning/20
+                                {% else %}bg-error-container text-on-error-container border-error/20{% endif %}">
+                                <span class="w-1.5 h-1.5 rounded-full 
+                                    {% if pred.risk_level == 'LOW' %}bg-primary
+                                    {% elif pred.risk_level == 'MEDIUM' %}bg-status-warning
+                                    {% else %}bg-status-error{% endif %}"></span>
+                                {% if pred.risk_level == 'LOW' %}Faible{% elif pred.risk_level == 'MEDIUM' %}Modéré{% else %}Élevé{% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{% url 'detection:prediction_result' pred.pk %}" title="Voir les détails"
+                                   class="w-8 h-8 flex items-center justify-center rounded text-primary hover:bg-primary/10 transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                </a>
+                                <form action="{% url 'detection:delete_prediction' pred.pk %}" method="post" class="inline" onsubmit="return confirm('Supprimer cette évaluation ?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button type="submit" title="Supprimer" class="w-8 h-8 flex items-center justify-center rounded text-status-error hover:bg-error-container transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="px-6 py-16 text-center text-text-secondary font-body-md">
+            <div class="flex flex-col items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center text-text-secondary/50 mb-2">
+                    <span class="material-symbols-outlined text-[32px]">inbox</span>
+                </div>
+                <p class="text-lg">Aucune évaluation trouvée.</p>
+                <a href="{% url 'detection:prediction_form' %}" class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-on-primary-fixed-variant transition-colors mt-2 shadow-sm">
+                    Commencer une évaluation
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Footer Action -->
+    <div class="mt-6">
+        <a href="{% url 'dashboard' %}" class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-fixed-dim transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Retour au tableau de bord
+        </a>
+    </div>
+</div>
+{% endblock %}

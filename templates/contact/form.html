@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - Vitalis Green{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[800px] mt-8 mb-12 fade-enter-active mx-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-on-primary-container mb-4 shadow-sm border border-outline-variant">
+            <span class="material-symbols-outlined text-3xl">mail</span>
+        </div>
+        <h2 class="font-display-hero text-[32px] md:text-[40px] text-on-surface tracking-tight mb-3">Contactez-nous</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
+            Une question ou une demande d'assistance ? Remplissez le formulaire ci-dessous, notre équipe vous répondra dans les plus brefs délais.
+        </p>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-6 md:p-10 relative overflow-hidden glass-panel">
+        <form method="post" novalidate class="space-y-form-stack">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="p-4 mb-6 rounded-lg bg-error-container text-on-error-container border border-error/20 flex items-start gap-3">
+                    <span class="material-symbols-outlined shrink-0">error</span>
+                    <div>
+                        {% for error in form.non_field_errors %}
+                            <p class="font-body-md text-body-md">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <!-- Name -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ form.sender_name.id_for_label }}">Nom Complet</label>
+                    {{ form.sender_name }}
+                    {% if form.sender_name.errors %}
+                        <p class="text-error text-xs mt-1">{{ form.sender_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Email -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ form.sender_email.id_for_label }}">Adresse Email</label>
+                    {{ form.sender_email }}
+                    {% if form.sender_email.errors %}
+                        <p class="text-error text-xs mt-1">{{ form.sender_email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Subject -->
+            <div class="mt-6">
+                <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ form.subject.id_for_label }}">Sujet</label>
+                {{ form.subject }}
+                {% if form.subject.errors %}
+                    <p class="text-error text-xs mt-1">{{ form.subject.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Message -->
+            <div class="mt-6">
+                <label class="block font-label-md text-label-md text-on-surface mb-1" for="{{ form.message.id_for_label }}">Message</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <p class="text-error text-xs mt-1">{{ form.message.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Honeypot -->
+            <div style="display:none;">
+                {{ form.honeypot }}
+            </div>
+            
+            <div class="border-t border-outline-variant my-8"></div>
+            
+            <div class="text-center">
+                <button type="submit" class="bg-primary text-on-primary font-label-md text-label-md py-3 px-8 rounded-lg shadow-sm hover:bg-on-primary-fixed-variant transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary flex items-center justify-center gap-2 text-lg w-full md:w-auto mx-auto min-w-[280px]">
+                    Envoyer le Message
+                    <span class="material-symbols-outlined">send</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

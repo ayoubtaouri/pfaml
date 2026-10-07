@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Message de {{ message.sender_name }} - Admin{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[800px] mt-8 mb-12 fade-enter-active mx-auto">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-8">
+        <a href="{% url 'admin_panel:messages_list' %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        </a>
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Détail du Message</h2>
+            <p class="font-body-md text-body-md text-text-secondary">Réception du {{ message.created_at|date:"d M Y à H:i" }}</p>
+        </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm glass-panel overflow-hidden">
+        
+        <!-- Message Header -->
+        <div class="px-6 py-5 border-b border-outline-variant bg-surface-light">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h4 class="font-headline-sm text-headline-sm text-on-surface">{{ message.get_subject_display }}</h4>
+                    <p class="font-body-md text-body-md text-text-secondary mt-1">
+                        De : <span class="text-on-surface font-semibold">{{ message.sender_name }}</span> 
+                        &lt;<a href="mailto:{{ message.sender_email }}" class="text-primary hover:underline">{{ message.sender_email }}</a>&gt;
+                    </p>
+                </div>
+                {% if message.is_read %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-surface-container text-text-secondary border border-outline-variant shrink-0">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                        Lu
+                    </div>
+                {% else %}
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-status-warning/10 text-status-warning border border-status-warning/20 shrink-0">
+                        <span class="material-symbols-outlined text-[16px]">mail</span>
+                        Non Lu
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Message Body -->
+        <div class="p-8">
+            <div class="font-body-lg text-body-lg text-on-surface bg-surface-container-low rounded-xl p-6 border border-outline-variant leading-relaxed whitespace-pre-wrap">{{ message.message }}</div>
+        </div>
+        
+        <!-- Actions Footer -->
+        <div class="px-6 py-5 border-t border-outline-variant bg-surface-light flex flex-col sm:flex-row gap-3">
+            <a href="mailto:{{ message.sender_email }}" class="px-5 py-2.5 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2 justify-center">
+                <span class="material-symbols-outlined text-[18px]">reply</span>
+                Répondre par Email
+            </a>
+            
+            {% if not message.is_read %}
+            <form method="post" action="{% url 'admin_panel:message_detail' message.id %}">
+                {% csrf_token %}
+                <button type="submit" class="px-5 py-2.5 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-2 justify-center w-full sm:w-auto">
+                    <span class="material-symbols-outlined text-[18px]">done_all</span>
+                    Marquer comme Lu
+                </button>
+            </form>
+            {% endif %}
+            
+            <a href="{% url 'admin_panel:messages_list' %}" class="px-5 py-2.5 border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-lg hover:bg-surface-container-low transition-colors flex items-center gap-2 justify-center">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Retour aux Messages
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

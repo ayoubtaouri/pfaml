@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Résultat - Vitalis Green{% endblock %}
+
+{% block extra_css %}
+<style>
+    .gauge-container { position: relative; width: 300px; height: 150px; margin: 0 auto; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
+    .gauge-background { position: absolute; top: 0; left: 0; width: 300px; height: 300px; border-radius: 50%; border: 30px solid #E5E7EB; box-sizing: border-box; }
+    .gauge-fill { position: absolute; top: 0; left: 0; width: 300px; height: 300px; border-radius: 50%; border: 30px solid currentColor; box-sizing: border-box; border-bottom-color: transparent; border-left-color: transparent; transform: rotate(135deg); transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .gauge-text { position: absolute; bottom: 10px; text-align: center; width: 100%; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1000px] mt-8 mb-12 fade-enter-active mx-auto">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            <a href="{% url 'dashboard' %}" class="inline-flex items-center gap-1 font-label-md text-label-md text-text-secondary hover:text-primary transition-colors mb-2">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Retour au Tableau de bord
+            </a>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Résultat d'Évaluation</h2>
+            <p class="font-body-md text-body-md text-text-secondary mt-1">Patient ID: #VGP-{{ user.id|default:"0000" }} &bull; Date: {{ prediction.created_at|date:"d M Y" }}</p>
+        </div>
+    </div>
+
+    <!-- Gauge Section -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-8 mb-6 glass-panel relative overflow-hidden flex flex-col items-center text-center">
+        
+        <h3 class="font-headline-md text-headline-md text-on-surface mb-6">Indice de Risque Prédictif</h3>
+        
+        <!-- Gauge Implementation -->
+        {% widthratio prediction.risk_score 1 100 as percentage %}
+        <div class="gauge-container my-4" id="gaugeColorContainer">
+            <div class="gauge-background"></div>
+            <!-- The rotation formula for a half circle gauge is: 45deg (0%) to 225deg (100%) -->
+            <div class="gauge-fill" id="gaugeFill"></div>
+            <div class="gauge-text">
+                <div class="font-display-hero text-[56px]" id="gaugePercentage">{{ percentage|floatformat:1 }}%</div>
+                <div class="font-label-md text-label-md text-text-secondary tracking-widest uppercase mt-1">Probabilité</div>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <div id="riskBadge" class="inline-flex items-center justify-center px-6 py-2 rounded-full font-headline-sm text-headline-sm border">
+                {% if prediction.risk_level == 'HIGH' %}
+                    Risque Élevé de Diabète
+                {% elif prediction.risk_level == 'MEDIUM' %}
+                    Risque Modéré de Diabète
+                {% else %}
+                    Risque Faible de Diabète
+                {% endif %}
+            </div>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const score = parseFloat("{{ prediction.risk_score }}".replace(',', '.'));
+                const percentage = score * 100;
+                const container = document.getElementById('gaugeColorContainer');
+                const fill = document.getElementById('gaugeFill');
+                const text = document.getElementById('gaugePercentage');
+                const badge = document.getElementById('riskBadge');
+                
+                let color = '#3c6a00'; // primary green
+                let badgeBg = 'rgba(124, 179, 66, 0.1)';
+                let badgeBorder = 'rgba(60, 106, 0, 0.2)';
+                
+                if (score >= 0.75) {
+                    color = '#ba1a1a'; // error red
+                    badgeBg = '#ffdad6'; // error container
+                    badgeBorder = 'rgba(186, 26, 26, 0.2)';
+                } else if (score >= 0.3) {
+                    color = '#F9A825'; // warning yellow
+                    badgeBg = '#FFF8E1'; 
+                    badgeBorder = 'rgba(249, 168, 37, 0.2)';
+                }
+                
+                // Apply colors
+                container.style.color = color; // For currentColor on gauge-fill border
+                text.style.color = color;
+                badge.style.color = color;
+                badge.style.backgroundColor = badgeBg;
+                badge.style.borderColor = badgeBorder;
+                
+                // Animate gauge (135deg is 0%, 315deg is 100%)
+                const rotation = 135 + (percentage * 1.8);
+                setTimeout(() => {
+                    fill.style.transform = `rotate(${rotation}deg)`;
+                }, 100);
+            });
+        </script>
+    </div>
+
+    <!-- Clinical Data Analyzed -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm glass-panel overflow-hidden mb-6">
+        <div class="px-6 py-5 border-b border-outline-variant bg-surface-light flex justify-between items-center">
+            <h4 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined">data_object</span>
+                Données Cliniques Analysées
+            </h4>
+            <span class="bg-surface-container border border-outline-variant px-3 py-1 rounded-full font-caption text-caption text-on-surface-variant font-medium">8 Variables</span>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-6">
+                <!-- Data Items -->
+                <div class="md:border-r border-outline-variant">
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Genre</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{{ prediction.get_gender_display }}</div>
+                </div>
+                <div class="md:border-r border-outline-variant">
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Âge</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{{ prediction.age|floatformat:0 }}<span class="text-sm text-text-secondary font-normal ml-1">ans</span></div>
+                </div>
+                <div class="md:border-r border-outline-variant">
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Hypertension</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{% if prediction.hypertension == 1 %}Oui{% else %}Non{% endif %}</div>
+                </div>
+                <div>
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Maladie Cardiaque</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{% if prediction.heart_disease == 1 %}Oui{% else %}Non{% endif %}</div>
+                </div>
+                
+                <div class="md:border-r border-outline-variant">
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Tabagisme</div>
+                    <div class="font-headline-sm text-headline-sm text-on-surface">{{ prediction.get_smoking_history_display }}</div>
+                </div>
+                <div class="md:border-r border-outline-variant">
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">IMC</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{{ prediction.bmi|floatformat:1 }}<span class="text-sm text-text-secondary font-normal ml-1">kg/m²</span></div>
+                </div>
+                <div class="md:border-r border-outline-variant">
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Taux d'HbA1c</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{{ prediction.HbA1c_level|floatformat:1 }}<span class="text-sm text-text-secondary font-normal ml-1">%</span></div>
+                </div>
+                <div>
+                    <div class="font-caption text-caption text-text-secondary uppercase tracking-wider mb-1">Glycémie</div>
+                    <div class="font-headline-md text-headline-md text-on-surface">{{ prediction.blood_glucose_level|floatformat:0 }}<span class="text-sm text-text-secondary font-normal ml-1">mg/dL</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-6 flex gap-4 items-start mb-10">
+        <span class="material-symbols-outlined text-text-secondary shrink-0 mt-0.5">gavel</span>
+        <div>
+            <h6 class="font-label-md text-label-md text-on-surface mb-1">Avis Médical Légal</h6>
+            <p class="font-body-md text-body-md text-text-secondary">
+                Cet outil fournit une estimation statistique basée sur des modèles de machine learning pré-entraînés et ne constitue pas un diagnostic médical. Les résultats doivent être interprétés par un professionnel de la santé qualifié.
+            </p>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="text-center border-t border-outline-variant pt-8">
+        <a href="{% url 'detection:prediction_form' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-surface-container-lowest border border-primary text-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-primary hover:text-on-primary transition-colors">
+            <span class="material-symbols-outlined">restart_alt</span>
+            Commencer une Nouvelle Évaluation
+        </a>
+    </div>
+
+</div>
+{% endblock %}

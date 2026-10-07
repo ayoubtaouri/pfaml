@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Diabetes Risk Detection{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>About DiabetesRisk</h2>
+        <p class="lead">An intelligent diabetes risk detection system</p>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <h4>Our Mission</h4>
+        <p>
+            DiabetesRisk is dedicated to raising awareness about diabetes risk factors and 
+            providing accessible tools for early detection. Our machine learning-powered platform 
+            helps individuals understand their potential risk levels based on medical data.
+        </p>
+    </div>
+    
+    <div class="col-md-6">
+        <h4>How It Works</h4>
+        <p>
+            Our system uses an XGBoost machine learning model trained on the Pima Indians Diabetes dataset. 
+            Based on eight key medical parameters, the model provides a statistical probability of diabetes risk. 
+            This tool is for educational purposes and should not be used as a substitute for professional medical advice.
+        </p>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <h4>Technology Stack</h4>
+        <ul>
+            <li><strong>Backend:</strong> Django 5.x (Python)</li>
+            <li><strong>Frontend:</strong> HTML5, CSS3, Bootstrap 5</li>
+            <li><strong>Database:</strong> SQLite</li>
+            <li><strong>Machine Learning:</strong> XGBoost, Scikit-learn</li>
+            <li><strong>Authentication:</strong> Django Sessions</li>
+        </ul>
+    </div>
+    
+    <div class="col-md-6">
+        <h4>Medical Data Parameters</h4>
+        <ul>
+            <li>Pregnancies</li>
+            <li>Glucose concentration</li>
+            <li>Blood pressure</li>
+            <li>Skin thickness</li>
+            <li>Insulin level</li>
+            <li>BMI (Body Mass Index)</li>
+            <li>Diabetes Pedigree Function</li>
+            <li>Age</li>
+        </ul>
+    </div>
+</div>
+
+<div class="alert alert-warning mt-5">
+    <h6>Important Disclaimer</h6>
+    <p class="mb-0">
+        <strong>This tool is for educational purposes only and does NOT provide medical diagnosis or treatment advice.</strong> 
+        Diabetes is a serious medical condition that requires professional evaluation. 
+        Always consult with a qualified healthcare provider for medical concerns and diagnosis.
+    </p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12 text-center">
+        <p class="text-muted">For questions or support, <a href="{% url 'contact' %}">contact us</a>.</p>
+    </div>
+</div>
+{% endblock %}

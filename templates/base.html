@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vitalis Green - Système Clinique{% endblock %}</title>
+    {% load static %}
+    
+    <!-- Tailwind CSS & Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration (Stitch / Vitalis Green) -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#0e2000",
+                        "inverse-primary": "#9dd761",
+                        "on-surface-variant": "#424939",
+                        "on-background": "#1b1c1c",
+                        "inverse-surface": "#303030",
+                        "on-secondary-container": "#3d7116",
+                        "primary-container": "#7cb342",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#234100",
+                        "outline": "#737a68",
+                        "on-tertiary": "#ffffff",
+                        "text-secondary": "#666666",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed": "#b7f481",
+                        "tertiary-fixed-dim": "#9cd769",
+                        "surface-container": "#f0eded",
+                        "background": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "surface-bright": "#fbf9f8",
+                        "status-error": "#E53935",
+                        "secondary-container": "#b6f48a",
+                        "tertiary": "#386b01",
+                        "surface-container-low": "#f6f3f2",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface": "#fbf9f8",
+                        "surface-accent": "#8BC34A",
+                        "primary-fixed-dim": "#9dd761",
+                        "tertiary-container": "#7bb34a",
+                        "on-tertiary-container": "#204200",
+                        "on-primary-fixed-variant": "#2c5000",
+                        "surface-dim": "#dcd9d9",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-primary": "#ffffff",
+                        "primary": "#3c6a00",
+                        "surface-tint": "#3c6a00",
+                        "outline-variant": "#c2c9b5",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#b8f47a",
+                        "on-secondary-fixed": "#0a2000",
+                        "secondary": "#376a10",
+                        "on-tertiary-fixed": "#0d2000",
+                        "status-warning": "#F9A825",
+                        "on-secondary-fixed-variant": "#245100",
+                        "secondary-fixed-dim": "#9bd771",
+                        "surface-light": "#F5F5F5",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#b6f48a",
+                        "on-tertiary-fixed-variant": "#285000",
+                        "surface-variant": "#e4e2e1",
+                        "surface-container-highest": "#e4e2e1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "3rem",
+                        "form-stack": "1.5rem",
+                        "component-padding": "0.75rem",
+                        "gutter": "1rem",
+                        "container-padding": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter", "sans-serif"],
+                        "display-hero": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "caption": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "code": ["JetBrains Mono", "monospace"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "code": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .vitalis-input:focus {
+            outline: none;
+            border-color: #3c6a00;
+            box-shadow: 0 0 0 2px rgba(60, 106, 0, 0.2);
+        }
+        
+        /* Transition animations */
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-surface-light min-h-screen flex flex-col font-body-md text-on-surface antialiased">
+
+    <!-- Navigation Bar -->
+    <header class="bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-50">
+        <div class="max-w-[1200px] mx-auto px-container-padding">
+            <div class="flex justify-between h-16">
+                <!-- Logo & Brand -->
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center gap-2 text-primary hover:text-primary-fixed-dim transition-colors">
+                        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+                        <span class="font-headline-md text-headline-md tracking-tight">Vitalis Green</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="{% url 'home' %}" class="font-label-md text-label-md {% if request.resolver_match.url_name == 'home' %}text-primary font-semibold{% else %}text-on-surface-variant hover:text-primary{% endif %} transition-colors">Accueil</a>
+                    
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="font-label-md text-label-md {% if request.resolver_match.url_name == 'dashboard' %}text-primary font-semibold{% else %}text-on-surface-variant hover:text-primary{% endif %} transition-colors">Tableau de bord</a>
+                        <a href="{% url 'detection:prediction_form' %}" class="font-label-md text-label-md {% if 'detection' in request.path %}text-primary font-semibold{% else %}text-on-surface-variant hover:text-primary{% endif %} transition-colors">Évaluation</a>
+                        
+                        {% if user.is_admin %}
+                            <a href="{% url 'admin_panel:dashboard' %}" class="font-label-md text-label-md {% if 'admin' in request.path %}text-primary font-semibold{% else %}text-on-surface-variant hover:text-primary{% endif %} transition-colors">Panel Patients</a>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <a href="{% url 'contact' %}" class="font-label-md text-label-md {% if request.resolver_match.url_name == 'contact' %}text-primary font-semibold{% else %}text-on-surface-variant hover:text-primary{% endif %} transition-colors">Contact</a>
+                </nav>
+
+                <!-- User Actions -->
+                <div class="hidden md:flex items-center gap-4">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+                            <a href="{% url 'profile' %}" class="flex items-center gap-2 hover:opacity-80 transition-opacity" title="Voir mon profil">
+                                <span class="font-label-md text-label-md text-on-surface">{{ user.first_name }} {{ user.last_name }}</span>
+                                <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=3c6a00&color=fff" alt="Avatar" class="w-8 h-8 rounded-full border border-outline-variant shadow-sm">
+                            </a>
+                            <a href="{% url 'logout' %}" title="Déconnexion" class="text-text-secondary hover:text-error transition-colors flex items-center">
+                                <span class="material-symbols-outlined text-xl">logout</span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">Connexion</a>
+                        <a href="{% url 'register' %}" class="px-4 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-primary-fixed-variant transition-colors">Commencer</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Messages / Notifications -->
+    {% if messages %}
+        <div class="max-w-[1200px] mx-auto px-container-padding w-full mt-4">
+            {% for message in messages %}
+                <div class="flex items-center justify-between p-4 mb-4 rounded-lg border {% if message.tags == 'error' %}bg-error-container text-on-error-container border-error/20{% elif message.tags == 'success' %}bg-secondary-container text-on-secondary-container border-secondary/20{% else %}bg-surface-container-high text-on-surface border-outline-variant{% endif %}">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined">
+                            {% if message.tags == 'error' %}error
+                            {% elif message.tags == 'success' %}check_circle
+                            {% else %}info
+                            {% endif %}
+                        </span>
+                        <p class="font-body-md text-body-md">{{ message }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col items-center justify-start p-container-padding sm:px-6 lg:px-8 relative w-full max-w-[1200px] mx-auto">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Component (Stitch Design) -->
+    <footer class="bg-surface-container-lowest border-t border-outline-variant w-full mt-auto">
+        <div class="max-w-[1200px] mx-auto px-section-gap py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">eco</span>
+                <span class="font-headline-sm text-headline-sm text-primary font-semibold">Vitalis Green</span>
+            </div>
+            <p class="font-caption text-caption text-on-surface-variant text-center md:text-left">
+                © 2026 Vitalis Green. Système d'Aide à la Décision Clinique.
+            </p>
+            <nav class="flex gap-gutter flex-wrap justify-center">
+                <a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-colors" href="#">Politique de Confidentialité</a>
+                <a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-colors" href="#">Conditions d'Utilisation</a>
+                <a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-colors" href="#">Avis Médical</a>
+                <a class="font-caption text-caption text-on-surface-variant hover:text-primary transition-colors" href="{% url 'contact' %}">Support</a>
+            </nav>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

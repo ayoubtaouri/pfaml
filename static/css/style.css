@@ -1,0 +1,453 @@
+/* Vitalis Green Aesthetic - DiabetesRisk Stylesheet */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-green: #3B7E28; /* Logo green */
+    --primary-light: #52a13b;
+    --dark-green: #2D6A4F;
+    --light-green: #95D5B2;
+    --bg-main: #FAFAFA;
+    --border-color: #E5E7EB;
+    --text-main: #1F2937;
+    --text-muted: #6B7280;
+    --warning-yellow: #F59E0B;
+    --danger-red: #EF4444;
+    --success-green: #10B981;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+}
+
+/* Navigation */
+.navbar {
+    background-color: #FFFFFF !important;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0; /* Remove top/bottom padding for full height links */
+    height: 70px;
+}
+
+.navbar-brand {
+    font-size: 1.25rem !important;
+    font-weight: 600;
+    color: var(--primary-green) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0 1rem;
+    padding: 23px 0 !important; /* Full height for border bottom */
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--text-main) !important;
+}
+
+.nav-link.active {
+    color: var(--text-main) !important;
+    border-bottom-color: var(--primary-green);
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-icons svg {
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.nav-icons svg:hover {
+    color: var(--text-main);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Forms */
+.form-control,
+.form-select {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+    background-color: #FFFFFF;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-green);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(59, 126, 40, 0.1);
+    outline: none;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-helper {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* Cards */
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    box-shadow: none; /* Flat design */
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 8px 8px 0 0 !important;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card .icon-top {
+    width: 36px;
+    height: 36px;
+    background-color: #F3F4F6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+}
+
+.metric-card .icon-top.green-bg {
+    background-color: #e2f0dc;
+    color: var(--primary-green);
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-top: 10px;
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: auto;
+    margin-bottom: 5px;
+}
+
+/* Buttons */
+.btn {
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-green);
+    border-color: var(--dark-green);
+}
+
+.btn-outline-primary {
+    color: var(--primary-green);
+    border-color: var(--primary-green);
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-green);
+    color: #FFFFFF;
+}
+
+.btn-outline-danger {
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+}
+
+.btn-outline-danger:hover {
+    color: var(--danger-red);
+    background: transparent;
+}
+
+/* Tables */
+.table th {
+    background-color: transparent !important;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.8rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-top: none;
+}
+
+.table td {
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+/* Custom Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-dot.low { background-color: var(--primary-green); }
+.status-dot.medium { background-color: var(--warning-yellow); }
+.status-dot.high { background-color: var(--danger-red); }
+
+/* Alerts */
+.alert {
+    border-radius: 6px;
+    border: 1px solid transparent;
+    padding: 1rem 1.25rem;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-main);
+    padding: 1.5rem 0;
+    font-size: 0.85rem;
+}
+
+footer a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--text-main);
+}
+
+.footer-text {
+    color: var(--text-muted);
+}
+
+/* Form container specifically */
+.assessment-container {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Gauge Chart CSS */
+.gauge-container {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.gauge-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 30px solid #E5E7EB;
+    box-sizing: border-box;
+}
+
+.gauge-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 30px solid var(--danger-red); /* Update color dynamically via inline style if needed */
+    box-sizing: border-box;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    transform: rotate(45deg); /* Base rotation */
+    transition: transform 1s ease-out;
+}
+
+.gauge-text {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.gauge-percentage {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--danger-red); /* Update color dynamically */
+}
+
+.gauge-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 5px;
+}
+
+.risk-badge-large {
+    background-color: #FEF2F2;
+    color: var(--danger-red);
+    padding: 10px 30px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.25rem;
+    display: inline-block;
+    margin-top: 1.5rem;
+}
+
+/* Result Data Grid */
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+}
+
+.data-item {
+    border-left: 1px solid var(--border-color);
+    padding-left: 1rem;
+}
+
+.data-item:first-child,
+.data-item:nth-child(5) {
+    border-left: none;
+    padding-left: 0;
+}
+
+.data-item-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.data-item-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.data-item-unit {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+
+/* Recommendation Box */
+.recommendation-box {
+    background-color: #FAFAFA;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.recommendation-box h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.action-required-box {
+    border-left: 4px solid var(--danger-red);
+    background-color: #FFFFFF;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des Utilisateurs - Admin{% endblock %}
+
+{% block content %}
+<div class="w-full mt-8 mb-12 fade-enter-active">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div class="flex items-center gap-3">
+            <a href="{% url 'admin_panel:dashboard' %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </a>
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Gérer les Utilisateurs</h2>
+                <p class="font-body-md text-body-md text-text-secondary">Consulter et gérer les comptes utilisateurs</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 mb-6 glass-panel">
+        <form method="get" class="flex flex-col sm:flex-row gap-4">
+            <div class="flex-1">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-3 flex items-center text-text-secondary">
+                        <span class="material-symbols-outlined text-[20px]">search</span>
+                    </span>
+                    <input type="text" name="q" value="{{ query }}"
+                           class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 pl-10 pr-3"
+                           placeholder="Recherche par nom ou email">
+                </div>
+            </div>
+            <button type="submit" class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                Filtrer
+            </button>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm glass-panel overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-outline-variant bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Nom</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Évaluations</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Inscrit le</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                    {% for u in page_obj %}
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface font-semibold">{{ u.first_name }} {{ u.last_name }}</td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-text-secondary">{{ u.email }}</td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">{{ u.prediction_count }}</td>
+                        <td class="px-6 py-4">
+                            {% if u.is_active %}
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-on-primary-fixed-variant border border-primary/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                    Actif
+                                </div>
+                            {% else %}
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container border border-error/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-status-error"></span>
+                                    Inactif
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-text-secondary whitespace-nowrap">{{ u.date_joined|date:"d M Y" }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'admin_panel:user_detail' u.id %}" class="inline-flex items-center gap-1 px-3 py-1.5 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary hover:text-on-primary transition-colors text-sm">
+                                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                                Voir
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-text-secondary font-body-md">
+                            <div class="flex flex-col items-center gap-3">
+                                <span class="material-symbols-outlined text-4xl opacity-40">person_off</span>
+                                <p>Aucun utilisateur trouvé</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="px-6 py-4 border-t border-outline-variant flex items-center justify-center gap-2">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if query %}&q={{ query }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">first_page</span>
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg font-label-md text-label-md transition-colors {% if page_obj.number == num %}bg-primary text-on-primary{% else %}border border-outline-variant hover:bg-surface-container-low text-on-surface{% endif %}">
+                    {{ num }}
+                </a>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">last_page</span>
+                </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

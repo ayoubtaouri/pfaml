@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages Contact - Admin{% endblock %}
+
+{% block content %}
+<div class="w-full mt-8 mb-12 fade-enter-active">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div class="flex items-center gap-3">
+            <a href="{% url 'admin_panel:dashboard' %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </a>
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Messages Contact</h2>
+                <p class="font-body-md text-body-md text-text-secondary">
+                    Voir et gérer les messages des utilisateurs
+                    {% if unread_count > 0 %}
+                    <span class="ml-2 px-2 py-0.5 rounded-full bg-status-error text-white text-xs font-bold">{{ unread_count }} non lus</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 mb-6 glass-panel">
+        <form method="get" class="flex flex-col sm:flex-row gap-4">
+            <select name="read" class="vitalis-input bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3">
+                <option value="">Tous les Messages</option>
+                <option value="unread" {% if read_filter == 'unread' %}selected{% endif %}>Non Lus</option>
+                <option value="read" {% if read_filter == 'read' %}selected{% endif %}>Lus</option>
+            </select>
+            <button type="submit" class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2 w-fit">
+                <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                Filtrer
+            </button>
+        </form>
+    </div>
+
+    <!-- Messages Table -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm glass-panel overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-outline-variant bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Expéditeur</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Sujet</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-4 font-semibold uppercase tracking-wider text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                    {% for message in page_obj %}
+                    <tr class="hover:bg-surface-container-low/50 transition-colors {% if not message.is_read %}bg-primary/[0.02]{% endif %}">
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface font-semibold">
+                            {{ message.sender_name }}
+                        </td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-text-secondary">{{ message.sender_email }}</td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">{{ message.get_subject_display }}</td>
+                        <td class="px-6 py-4">
+                            {% if message.is_read %}
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-text-secondary border border-outline-variant">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-text-secondary/50"></span>
+                                    Lu
+                                </div>
+                            {% else %}
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-status-warning/10 text-status-warning border border-status-warning/20">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-status-warning"></span>
+                                    Non Lu
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-body-md text-body-md text-text-secondary whitespace-nowrap">{{ message.created_at|date:"d M Y H:i" }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'admin_panel:message_detail' message.id %}" class="inline-flex items-center gap-1 px-3 py-1.5 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary hover:text-on-primary transition-colors text-sm">
+                                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                                Voir
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-text-secondary font-body-md">
+                            <div class="flex flex-col items-center gap-3">
+                                <span class="material-symbols-outlined text-4xl opacity-40">inbox</span>
+                                <p>Aucun message trouvé</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="px-6 py-4 border-t border-outline-variant flex items-center justify-center gap-2">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if read_filter %}&read={{ read_filter }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if read_filter %}&read={{ read_filter }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg font-label-md text-label-md transition-colors {% if page_obj.number == num %}bg-primary text-on-primary{% else %}border border-outline-variant hover:bg-surface-container-low text-on-surface{% endif %}">
+                    {{ num }}
+                </a>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if read_filter %}&read={{ read_filter }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors text-text-secondary">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

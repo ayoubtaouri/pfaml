@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Évaluation du Risque - Vitalis Green{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[900px] mt-8 mb-12 fade-enter-active mx-auto">
+    
+    <!-- Assessment Header -->
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-on-primary-container mb-4 shadow-sm border border-outline-variant">
+            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">medical_information</span>
+        </div>
+        <h2 class="font-display-hero text-[32px] md:text-[40px] text-on-surface tracking-tight mb-3">Évaluation Clinique</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
+            Veuillez saisir vos données cliniques aussi précisément que possible. Ces informations seront analysées par notre modèle IA pour estimer votre niveau de risque.
+        </p>
+    </div>
+
+    <!-- Main Form Container -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-6 md:p-10 relative overflow-hidden glass-panel">
+        
+        <form method="post" novalidate class="space-y-form-stack">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="p-4 mb-6 rounded-lg bg-error-container text-on-error-container border border-error/20 flex items-start gap-3">
+                    <span class="material-symbols-outlined shrink-0">error</span>
+                    <div>
+                        {% for error in form.non_field_errors %}
+                            <p class="font-body-md text-body-md">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                
+                <!-- Age -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Âge</label>
+                    <div class="relative">
+                        {{ form.age }}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <span class="text-text-secondary font-caption text-caption">ans</span>
+                        </div>
+                    </div>
+                    <p class="font-caption text-caption text-text-secondary mt-1">Votre âge actuel en années.</p>
+                    {% if form.age.errors %}<p class="text-error text-xs mt-1">{{ form.age.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- Gender -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Genre</label>
+                    {{ form.gender }}
+                    <p class="font-caption text-caption text-text-secondary mt-1">Genre biologique.</p>
+                    {% if form.gender.errors %}<p class="text-error text-xs mt-1">{{ form.gender.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- Blood Glucose -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Glycémie à jeun</label>
+                    <div class="relative">
+                        {{ form.blood_glucose_level }}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <span class="text-text-secondary font-caption text-caption">mg/dL</span>
+                        </div>
+                    </div>
+                    <p class="font-caption text-caption text-text-secondary mt-1">Concentration de glucose dans le sang.</p>
+                    {% if form.blood_glucose_level.errors %}<p class="text-error text-xs mt-1">{{ form.blood_glucose_level.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- HbA1c -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Taux d'HbA1c</label>
+                    <div class="relative">
+                        {{ form.HbA1c_level }}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <span class="text-text-secondary font-caption text-caption">%</span>
+                        </div>
+                    </div>
+                    <p class="font-caption text-caption text-text-secondary mt-1">Taux d'hémoglobine glycquée.</p>
+                    {% if form.HbA1c_level.errors %}<p class="text-error text-xs mt-1">{{ form.HbA1c_level.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- BMI -->
+                <div>
+                    <div class="flex justify-between items-end mb-1">
+                        <label class="block font-label-md text-label-md text-on-surface">Indice de Masse Corporelle (IMC)</label>
+                        <button type="button" onclick="calculerIMC(event)" class="text-primary hover:text-primary-fixed-dim text-xs font-semibold hover:underline bg-transparent border-none p-0 cursor-pointer">Calculer l'IMC</button>
+                    </div>
+                    <div class="relative">
+                        {{ form.bmi }}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <span class="text-text-secondary font-caption text-caption">kg/m²</span>
+                        </div>
+                    </div>
+                    <p class="font-caption text-caption text-text-secondary mt-1">Poids(kg) divisé par Taille²(m).</p>
+                    {% if form.bmi.errors %}<p class="text-error text-xs mt-1">{{ form.bmi.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- Smoking History -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Tabagisme</label>
+                    {{ form.smoking_history }}
+                    <p class="font-caption text-caption text-text-secondary mt-1">Habitudes de consommation de tabac.</p>
+                    {% if form.smoking_history.errors %}<p class="text-error text-xs mt-1">{{ form.smoking_history.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- Hypertension -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Hypertension</label>
+                    {{ form.hypertension }}
+                    <p class="font-caption text-caption text-text-secondary mt-1">Antécédents d'hypertension artérielle.</p>
+                    {% if form.hypertension.errors %}<p class="text-error text-xs mt-1">{{ form.hypertension.errors.0 }}</p>{% endif %}
+                </div>
+
+                <!-- Heart Disease -->
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1">Maladie Cardiaque</label>
+                    {{ form.heart_disease }}
+                    <p class="font-caption text-caption text-text-secondary mt-1">Antécédents de maladies cardiovasculaires.</p>
+                    {% if form.heart_disease.errors %}<p class="text-error text-xs mt-1">{{ form.heart_disease.errors.0 }}</p>{% endif %}
+                </div>
+                
+            </div>
+
+            <div class="border-t border-outline-variant my-8"></div>
+
+            <div class="flex flex-col items-center gap-4">
+                <button type="submit" class="bg-primary text-on-primary font-label-md text-label-md py-3 px-8 rounded-lg shadow-sm hover:bg-on-primary-fixed-variant transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary flex items-center justify-center gap-2 text-lg w-full md:w-auto min-w-[280px]">
+                    Lancer l'Analyse IA
+                    <span class="material-symbols-outlined">analytics</span>
+                </button>
+                
+                <div class="flex items-center justify-center gap-2 text-text-secondary bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant mt-2">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    <span class="font-caption text-caption">Cet outil fournit une estimation statistique et ne remplace pas un avis médical professionnel.</span>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- IMC Calculator Modal -->
+<div id="imcModal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg p-6 w-full max-w-sm mx-4 transform transition-all">
+        <h5 class="font-headline-sm text-headline-sm text-on-surface mb-4">Calculateur d'IMC</h5>
+        
+        <div class="mb-4">
+            <label class="block font-label-md text-label-md text-on-surface mb-1">Poids (kg)</label>
+            <input type="number" id="imcPoids" class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3" placeholder="ex., 70" min="20" max="300" step="0.1">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block font-label-md text-label-md text-on-surface mb-1">Taille (cm)</label>
+            <input type="number" id="imcTaille" class="vitalis-input w-full bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT focus:ring-2 focus:ring-primary focus:border-primary transition-colors py-2 px-3" placeholder="ex., 175" min="50" max="250" step="1">
+        </div>
+        
+        <div id="imcResult" class="hidden bg-primary-container text-on-primary-container rounded-lg p-3 text-center mb-4 font-semibold border border-primary/20"></div>
+        
+        <div class="flex gap-3">
+            <button type="button" onclick="fermerIMC()" class="flex-1 py-2 px-4 border border-outline-variant rounded-lg text-on-surface-variant font-label-md hover:bg-surface-container-low transition-colors">Annuler</button>
+            <button type="button" onclick="appliquerIMC()" class="flex-1 py-2 px-4 bg-primary text-on-primary rounded-lg font-label-md hover:bg-on-primary-fixed-variant transition-colors">Appliquer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculerIMC(e) {
+    e.preventDefault();
+    const modal = document.getElementById('imcModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+function fermerIMC() {
+    const modal = document.getElementById('imcModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.getElementById('imcResult').classList.add('hidden');
+}
+function appliquerIMC() {
+    const poids = parseFloat(document.getElementById('imcPoids').value);
+    const taille = parseFloat(document.getElementById('imcTaille').value) / 100;
+    if (poids && taille) {
+        const imc = (poids / (taille * taille)).toFixed(1);
+        const resultDiv = document.getElementById('imcResult');
+        resultDiv.classList.remove('hidden');
+        resultDiv.textContent = 'IMC = ' + imc + ' kg/m²';
+        document.getElementById('id_bmi').value = imc;
+        setTimeout(fermerIMC, 800);
+    }
+}
+</script>
+{% endblock %}
